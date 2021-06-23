@@ -13,29 +13,79 @@ package pers.zpw.leetcode.lc25;
 
 public class Solution {
 
+    // head = [1,2,3,4,5], k = 2
     public static void main(String[] args) {
 
+        ListNode node1 = new ListNode(1);
+        ListNode node2 = new ListNode(2);
+        ListNode node3 = new ListNode(3);
+        ListNode node4 = new ListNode(4);
+        ListNode node5 = new ListNode(5);
+
+        node1.next = node2;
+        node2.next = node3;
+        node3.next = node4;
+        node4.next = node5;
+
+        ListNode listNode = reverseKGroup(node1, 3);
+
+        System.out.println("操作成功" + listNode);
     }
 
-    public ListNode reverseKGroup(ListNode head, int k) {
+    public static ListNode reverseKGroup(ListNode head, int k) {
 
         ListNode dummy = new ListNode(0);
         dummy.next = head;
-
         ListNode pre = dummy;
         ListNode end = dummy;
 
         while (end.next != null) {
 
-            for (int i = 0; i < k; i++) {
+            for (int i = 0; i < k && end != null; i++) {
                 end = end.next;
             }
             if (end == null) {
                 break;
             }
 
+            ListNode start = pre.next;
+            ListNode next = end.next;
+            // 断开连接
+            end.next = null;
+
+            // 翻转链表
+            pre.next = reverseNodeList(start);
+
+            start.next = next;
+            pre = start;
+            end = start;
+        }
+        return dummy.next;
+
+    }
+
+    /**
+     *  链表翻转 1->2->3->4  ===>  4->3->2>1
+     */
+    private static ListNode reverseNodeList(ListNode head) {
+
+        if (head == null || head.next == null) {
+            return head;
         }
 
+        ListNode preNode = null;
+        ListNode curNode = head;
+        ListNode nextNode;
 
+        while (curNode != null) {
+
+            // 暂存后继节点
+            nextNode = curNode.next;
+
+            curNode.next = preNode;
+            preNode = curNode;
+            curNode = nextNode;
+        }
+        return preNode;
     }
 }
